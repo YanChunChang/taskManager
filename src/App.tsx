@@ -426,7 +426,6 @@ export default function App() {
               <span className="food-emoji">{food.emoji}</span>
               <strong>{foodNames[food.id]}</strong>
               <small>{t.pet.left(inventory[food.id])}</small>
-              <small className="food-effect">{t.pet.foodEffect(food.hunger, food.happiness, food.energy)}</small>
             </button>
           ))}
         </section>
@@ -452,7 +451,6 @@ export default function App() {
               <span className="food-emoji">{food.unlockLevel > level ? "🔒" : food.emoji}</span>
               <strong>{foodNames[food.id]}</strong>
               <small>{food.unlockLevel > level ? t.inventory.unlocksAt(food.unlockLevel) : t.inventory.available(inventory[food.id])}</small>
-              {food.unlockLevel <= level && <small className="food-effect">{t.pet.foodEffect(food.hunger, food.happiness, food.energy)}</small>}
             </div>
           ))}
         </section>
@@ -603,12 +601,21 @@ export default function App() {
           <span>{list.length}</span>
         </div>
         <div className="task-list">
-          {list.map((task) => {
-            const food = getFood(task.reward.type);
-            const text = taskText(task);
-            if (task.completed && !showCompleted) return null;
-            return (
-              <motion.div key={task.id} className={`task-swipe ${task.completed ? "can-delete" : ""}`} layout>
+          <AnimatePresence initial={false}>
+            {list.map((task) => {
+              const food = getFood(task.reward.type);
+              const text = taskText(task);
+              if (task.completed && !showCompleted) return null;
+              return (
+                <motion.div
+                  key={task.id}
+                  className={`task-swipe ${task.completed ? "can-delete" : ""}`}
+                  layout="position"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -120, scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 34, opacity: { duration: 0.16 } }}
+                >
                 {task.completed && (
                   <button className="delete-task-button" onClick={() => deleteTask(task.id)} aria-label={`${t.actions.deleteTask} ${text.title}`}>
                     <Trash2 size={20} />
@@ -634,16 +641,17 @@ export default function App() {
                 <button className="check-button" onClick={() => completeTask(task)} aria-label={`${t.actions.completeTask} ${text.title}`}>
                   {task.completed && <Check size={16} />}
                 </button>
-                <div>
+                <div className="task-copy">
                   <strong>{text.title}</strong>
                   {text.description && <p>{text.description}</p>}
                   <small>{task.deadline ? t.tasks.due(task.deadline) : t.tasks.flexible}</small>
                 </div>
                 <span className="reward-pill">+{task.reward.amount} {food.emoji}</span>
                 </motion.article>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
       </section>
     );

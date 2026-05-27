@@ -38,7 +38,6 @@ type Translation = {
     happiness: string;
     energy: string;
     left: (count: number) => string;
-    foodEffect: (hunger: number, happiness: number, energy: number) => string;
     status: {
       sad: string;
       excited: string;
@@ -147,7 +146,6 @@ export const translations: Record<Locale, Translation> = {
       happiness: "Happiness",
       energy: "Energy",
       left: (count) => `${count} left`,
-      foodEffect: (hunger, happiness, energy) => `H+${hunger} Joy+${happiness} E+${energy}`,
       status: {
         sad: "Mochi could use a tiny snack.",
         excited: "Mochi is twirling with joy.",
@@ -288,7 +286,6 @@ export const translations: Record<Locale, Translation> = {
       happiness: "快樂感",
       energy: "活力",
       left: (count) => `剩下 ${count} 個`,
-      foodEffect: (hunger, happiness, energy) => `飽+${hunger} 快+${happiness} 活+${energy}`,
       status: {
         sad: "麻糬想吃一點小點心。",
         excited: "麻糬開心到轉圈圈。",

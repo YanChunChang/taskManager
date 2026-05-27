@@ -336,6 +336,7 @@ h2 {
   border-radius: 22px;
   padding: 13px;
   touch-action: pan-y;
+  will-change: transform;
 }
 
 .task-card.done {
@@ -351,6 +352,23 @@ h2 {
   text-decoration: line-through;
 }
 
+.task-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.task-copy strong {
+  display: block;
+  line-height: 1.18;
+}
+
+.task-copy small {
+  display: block;
+  line-height: 1.25;
+}
+
 .delete-task-button {
   position: absolute;
   inset: 0 0 0 auto;
@@ -363,7 +381,7 @@ h2 {
 }
 
 .task-card p {
-  margin: 4px 0 5px;
+  margin: 0;
   font-size: 0.82rem;
   line-height: 1.35;
 }
@@ -524,16 +542,6 @@ h2 {
 .food-emoji {
   font-size: 2rem;
   line-height: 1;
-}
-
-.food-effect {
-  align-self: stretch;
-  padding: 6px 8px;
-  border-radius: 999px;
-  background: var(--theme-soft);
-  color: var(--theme-primary);
-  font-weight: 700;
-  text-align: center;
 }
 
 .achievement-list,
