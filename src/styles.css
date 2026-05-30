@@ -950,6 +950,7 @@ h2 {
 }
 
 .modal label {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -972,12 +973,23 @@ h2 {
 .modal textarea,
 .modal select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   border: 1px solid #ded0ff;
   border-radius: 16px;
   padding: 13px 14px;
   color: #2e1958;
   background: #fbf9ff;
+  font-size: 1rem;
+  line-height: 1.25;
   outline: none;
+}
+
+.modal input[type="date"],
+.modal select {
+  min-height: 54px;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .dark-mode .modal input,
