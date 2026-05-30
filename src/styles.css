@@ -92,6 +92,13 @@ button {
   --theme-shadow: rgba(37, 99, 235, 0.22);
 }
 
+.dark-mode {
+  color: #f7f2ff;
+  background:
+    radial-gradient(circle at top left, rgba(124, 58, 237, 0.34), transparent 34%),
+    linear-gradient(135deg, #160f28 0%, #24123f 48%, #130d22 100%);
+}
+
 .phone-frame {
   width: min(100%, 440px);
   min-height: min(860px, calc(100vh - 36px));
@@ -105,6 +112,12 @@ button {
   background: rgba(255, 255, 255, 0.86);
   box-shadow: 0 26px 70px rgba(76, 29, 149, 0.18);
   backdrop-filter: blur(18px);
+}
+
+.dark-mode .phone-frame {
+  border-color: rgba(221, 214, 254, 0.16);
+  background: rgba(28, 19, 48, 0.9);
+  box-shadow: 0 26px 70px rgba(8, 5, 18, 0.58);
 }
 
 .topbar {
@@ -166,6 +179,17 @@ h2 {
   border: 1px solid rgba(124, 58, 237, 0.1);
   background: rgba(255, 255, 255, 0.84);
   box-shadow: 0 16px 34px rgba(76, 29, 149, 0.1);
+}
+
+.dark-mode .card,
+.dark-mode .stat-card,
+.dark-mode .task-card,
+.dark-mode .food-card,
+.dark-mode .achievement,
+.dark-mode .setting-row {
+  border-color: rgba(221, 214, 254, 0.12);
+  background: rgba(44, 31, 72, 0.88);
+  box-shadow: 0 16px 34px rgba(8, 5, 18, 0.32);
 }
 
 .card {
@@ -246,6 +270,23 @@ h2 {
   color: #77658f;
 }
 
+.dark-mode .stat-card span,
+.dark-mode .muted,
+.dark-mode .task-card p,
+.dark-mode .task-card small,
+.dark-mode .food-card small,
+.dark-mode .achievement p,
+.dark-mode .setting-row span {
+  color: #c9b8ea;
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode strong,
+.dark-mode .food-card {
+  color: #fffaff;
+}
+
 .stat-card span,
 .task-card small,
 .food-card small,
@@ -285,6 +326,11 @@ h2 {
   overflow: hidden;
   border-radius: 999px;
   background: #eee7ff;
+}
+
+.dark-mode .progress-track,
+.dark-mode .meter-track {
+  background: rgba(221, 214, 254, 0.17);
 }
 
 .progress-fill {
@@ -346,6 +392,10 @@ h2 {
 .task-swipe.can-delete .task-card.done {
   opacity: 1;
   background: #ffffff;
+}
+
+.dark-mode .task-swipe.can-delete .task-card.done {
+  background: rgba(44, 31, 72, 0.96);
 }
 
 .task-card.done strong {
@@ -415,6 +465,22 @@ h2 {
   border-radius: 15px;
 }
 
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.edit-task-button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--theme-primary);
+  background: var(--theme-soft);
+}
+
 .reward-pill {
   white-space: nowrap;
   align-self: start;
@@ -424,6 +490,11 @@ h2 {
   background: #f5edff;
   font-size: 0.76rem;
   font-weight: 800;
+}
+
+.dark-mode .reward-pill {
+  color: #f5f0ff;
+  background: rgba(124, 58, 237, 0.28);
 }
 
 .primary-button {
@@ -459,6 +530,14 @@ h2 {
   box-shadow: inset 0 -40px 80px rgba(124, 58, 237, 0.12), 0 18px 45px rgba(76, 29, 149, 0.12);
 }
 
+.dark-mode .habitat {
+  background:
+    radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.16) 0 28%, transparent 29%),
+    radial-gradient(circle at 72% 18%, rgba(196, 181, 253, 0.2), transparent 22%),
+    linear-gradient(180deg, #31204f, #1b1331);
+  box-shadow: inset 0 -40px 80px rgba(124, 58, 237, 0.14), 0 18px 45px rgba(8, 5, 18, 0.35);
+}
+
 .habitat.interactive {
   cursor: pointer;
   outline: none;
@@ -477,6 +556,14 @@ h2 {
     radial-gradient(circle at 28% 24%, rgba(251, 207, 232, 0.55), transparent 18%),
     radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.9) 0 28%, transparent 29%),
     linear-gradient(180deg, #efe7ff, #d9f0ff);
+}
+
+.dark-mode .habitat.level-3,
+.dark-mode .habitat.level-4 {
+  background:
+    radial-gradient(circle at 28% 24%, rgba(240, 171, 252, 0.22), transparent 18%),
+    radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.18) 0 28%, transparent 29%),
+    linear-gradient(180deg, #332055, #17213f);
 }
 
 .pet-status {
@@ -673,6 +760,17 @@ h2 {
     transform 0.2s ease;
 }
 
+.dark-mode .choice-chip {
+  color: #d9ccf2;
+  background: rgba(31, 22, 52, 0.78);
+  box-shadow: inset 0 0 0 1px rgba(221, 214, 254, 0.12);
+}
+
+.dark-mode .choice-chip.active {
+  color: #fffaff;
+  background: rgba(124, 58, 237, 0.3);
+}
+
 .choice-chip.active {
   color: var(--theme-primary);
   background: var(--theme-soft);
@@ -775,6 +873,12 @@ h2 {
   backdrop-filter: blur(14px);
 }
 
+.dark-mode .bottom-nav {
+  border-color: rgba(221, 214, 254, 0.12);
+  background: rgba(31, 22, 52, 0.9);
+  box-shadow: 0 18px 35px rgba(8, 5, 18, 0.42);
+}
+
 .bottom-nav button {
   min-width: 0;
   height: 54px;
@@ -786,6 +890,10 @@ h2 {
   border-radius: 18px;
   color: #8c7aa8;
   background: transparent;
+}
+
+.dark-mode .bottom-nav button {
+  color: #bba8dc;
 }
 
 .bottom-nav button.active {
@@ -812,6 +920,10 @@ h2 {
   backdrop-filter: blur(10px);
 }
 
+.dark-mode .modal-backdrop {
+  background: rgba(8, 5, 18, 0.62);
+}
+
 .modal {
   width: min(100%, 440px);
   margin: 0 auto;
@@ -835,6 +947,10 @@ h2 {
   font-weight: 800;
 }
 
+.dark-mode .modal label {
+  color: #ddd6fe;
+}
+
 .modal label span {
   display: inline-flex;
   align-items: center;
@@ -853,6 +969,14 @@ h2 {
   outline: none;
 }
 
+.dark-mode .modal input,
+.dark-mode .modal textarea,
+.dark-mode .modal select {
+  border-color: rgba(221, 214, 254, 0.18);
+  color: #fffaff;
+  background: rgba(31, 22, 52, 0.9);
+}
+
 .modal textarea {
   min-height: 94px;
   resize: vertical;
@@ -860,8 +984,12 @@ h2 {
 
 .modal-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
+}
+
+.modal-grid label {
+  min-width: 0;
 }
 
 .reward-burst {
@@ -1355,6 +1483,10 @@ h2 {
 
   .food-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 

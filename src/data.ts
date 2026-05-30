@@ -53,6 +53,7 @@ export const initialTasks: Task[] = [
     descriptionKey: "task-1",
     deadline: new Date().toISOString().slice(0, 10),
     completed: false,
+    completedAt: undefined,
     reward: { type: "berries", amount: 2 },
   },
   {
@@ -62,6 +63,7 @@ export const initialTasks: Task[] = [
     description: "A calm 30-minute focus block.",
     descriptionKey: "task-2",
     completed: false,
+    completedAt: undefined,
     reward: { type: "seeds", amount: 3 },
   },
   {
@@ -69,6 +71,7 @@ export const initialTasks: Task[] = [
     title: "Reset desk and refill water",
     titleKey: "task-3",
     completed: true,
+    completedAt: new Date().toISOString().slice(0, 10),
     reward: { type: "berries", amount: 1 },
   },
 ];

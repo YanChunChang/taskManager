@@ -14,6 +14,7 @@ export type Task = {
   descriptionKey?: string;
   deadline?: string;
   completed: boolean;
+  completedAt?: string;
   reward: {
     type: FoodType;
     amount: number;

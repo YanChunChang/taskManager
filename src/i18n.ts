@@ -11,6 +11,7 @@ type Translation = {
     createTask: string;
     completeTask: string;
     deleteTask: string;
+    editTask: string;
     openPet: string;
     petChinchilla: string;
   };
@@ -67,6 +68,9 @@ type Translation = {
     taskReminder: (count: number) => string;
     sleepMode: string;
     sleepModeHint: string;
+    darkMode: string;
+    darkModeHint: string;
+    darkModeOn: string;
     chinchillaColor: string;
     chinchillaColors: {
       silver: string;
@@ -84,12 +88,14 @@ type Translation = {
   };
   modal: {
     title: string;
+    editTitle: string;
     taskTitle: string;
     taskPlaceholder: string;
     description: string;
     descriptionPlaceholder: string;
     deadline: string;
     reward: string;
+    updateTask: string;
   };
   foods: Record<FoodType, string>;
   tasksSeed: Record<string, { title: string; description?: string }>;
@@ -119,6 +125,7 @@ export const translations: Record<Locale, Translation> = {
       createTask: "Create task",
       completeTask: "Complete",
       deleteTask: "Delete",
+      editTask: "Edit",
       openPet: "Open pet screen",
       petChinchilla: "Pet Mochi",
     },
@@ -129,7 +136,7 @@ export const translations: Record<Locale, Translation> = {
         streak: "Streak",
         food: "Food",
         level: "Level",
-        days: (days) => `${days} days`,
+        days: (days) => `${days} day${days === 1 ? "" : "s"}`,
         items: (items) => `${items} items`,
       },
       dailyGoal: "Daily goal",
@@ -175,6 +182,9 @@ export const translations: Record<Locale, Translation> = {
       taskReminder: (count) => `${count} small task${count === 1 ? "" : "s"} still waiting for you.`,
       sleepMode: "Sleep mode",
       sleepModeHint: "Mochi rests and slows down",
+      darkMode: "Dark mode",
+      darkModeHint: "A cozy night palette",
+      darkModeOn: "Night palette is on",
       chinchillaColor: "Chinchilla color",
       chinchillaColors: {
         silver: "Silver",
@@ -192,12 +202,14 @@ export const translations: Record<Locale, Translation> = {
     },
     modal: {
       title: "Add a small task",
+      editTitle: "Edit task",
       taskTitle: "Task title",
       taskPlaceholder: "Write one clear next step",
       description: "Description",
       descriptionPlaceholder: "Optional notes",
       deadline: "Deadline",
       reward: "Reward",
+      updateTask: "Update task",
     },
     foods: {
       berries: "Moon Berries",
@@ -259,6 +271,7 @@ export const translations: Record<Locale, Translation> = {
       createTask: "建立任務",
       completeTask: "完成",
       deleteTask: "刪除",
+      editTask: "編輯",
       openPet: "打開寵物頁",
       petChinchilla: "摸摸麻糬",
     },
@@ -315,6 +328,9 @@ export const translations: Record<Locale, Translation> = {
       taskReminder: (count) => `還有 ${count} 個小任務在等你。`,
       sleepMode: "睡眠模式",
       sleepModeHint: "麻糬會休息，移動變慢",
+      darkMode: "深色模式",
+      darkModeHint: "切換成舒服的夜晚配色",
+      darkModeOn: "夜晚配色已開啟",
       chinchillaColor: "龍貓毛色",
       chinchillaColors: {
         silver: "銀灰",
@@ -332,12 +348,14 @@ export const translations: Record<Locale, Translation> = {
     },
     modal: {
       title: "新增一個小任務",
+      editTitle: "編輯任務",
       taskTitle: "任務標題",
       taskPlaceholder: "寫下一個清楚的下一步",
       description: "描述",
       descriptionPlaceholder: "可選填備註",
       deadline: "截止日",
       reward: "獎勵",
+      updateTask: "更新任務",
     },
     foods: {
       berries: "月光莓果",

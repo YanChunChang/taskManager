@@ -13,10 +13,12 @@ import {
   ListTodo,
   Moon,
   Palette,
+  Pencil,
   Plus,
   Settings,
   Sparkles,
   Star,
+  Sun,
   Trash2,
   Utensils,
 } from "lucide-react";
@@ -55,6 +57,23 @@ const storageKey = "chilla-tasks-state-v1";
 const initialInventory: Record<FoodType, number> = { berries: 3, seeds: 2, carrots: 0, snacks: 0 };
 const initialPetStats = { hunger: 64, happiness: 72, energy: 68 };
 
+const dateKey = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const previousDateKey = (key: string) => {
+  const yesterday = new Date(`${key}T00:00:00`);
+  yesterday.setDate(yesterday.getDate() - 1);
+  return dateKey(yesterday);
+};
+
+const yesterdayKey = () => previousDateKey(dateKey());
+
+const isLiveStreakDate = (value: string | null | undefined) => value === dateKey() || value === yesterdayKey();
+
 type SavedAppState = {
   version: 1;
   locale: Locale;
@@ -63,8 +82,11 @@ type SavedAppState = {
   petStats: typeof initialPetStats;
   gentleReminders: boolean;
   sleepMode: boolean;
+  darkMode: boolean;
   chinchillaColor: ChinchillaColor;
   seasonalTheme: SeasonalTheme;
+  streak: number;
+  lastStreakDate: string | null;
 };
 
 const isLocale = (value: unknown): value is Locale => value === "en" || value === "zh-TW";
@@ -90,8 +112,11 @@ const restoreSavedState = (raw: string | null): Partial<SavedAppState> | null =>
         : undefined,
       gentleReminders: typeof parsed.gentleReminders === "boolean" ? parsed.gentleReminders : undefined,
       sleepMode: typeof parsed.sleepMode === "boolean" ? parsed.sleepMode : undefined,
+      darkMode: typeof parsed.darkMode === "boolean" ? parsed.darkMode : undefined,
       chinchillaColor: isChinchillaColor(parsed.chinchillaColor) ? parsed.chinchillaColor : undefined,
       seasonalTheme: isSeasonalTheme(parsed.seasonalTheme) ? parsed.seasonalTheme : undefined,
+      streak: typeof parsed.streak === "number" && isLiveStreakDate(parsed.lastStreakDate) ? Math.max(0, parsed.streak) : 0,
+      lastStreakDate: typeof parsed.lastStreakDate === "string" ? parsed.lastStreakDate : null,
     };
   } catch {
     return null;
@@ -104,9 +129,11 @@ export default function App() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [inventory, setInventory] = useState<Record<FoodType, number>>(initialInventory);
   const [petStats, setPetStats] = useState(initialPetStats);
-  const [streak] = useState(6);
+  const [streak, setStreak] = useState(0);
+  const [lastStreakDate, setLastStreakDate] = useState<string | null>(null);
   const [dailyGoal] = useState(4);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [reward, setReward] = useState<Task["reward"] | null>(null);
   const [feedCombo, setFeedCombo] = useState(0);
   const [feeding, setFeeding] = useState(false);
@@ -115,22 +142,26 @@ export default function App() {
   const [gentleReminders, setGentleReminders] = useState(true);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
   const [sleepMode, setSleepMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [chinchillaColor, setChinchillaColor] = useState<ChinchillaColor>("silver");
   const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>("spring");
   const [openTaskId, setOpenTaskId] = useState<string | null>(null);
   const [storageReady, setStorageReady] = useState(false);
+  const [todayKey, setTodayKey] = useState(dateKey());
 
   const { hunger, happiness, energy } = petStats;
   const completed = completedCount(tasks);
+  const completedToday = tasks.filter((task) => task.completed && task.completedAt === todayKey).length;
   const t = translations[locale];
   const level = levelFromTasks(completed);
   const mood = determineMood(hunger, happiness, feedCombo);
   const effectiveMood = sleepMode ? "sleeping" : mood;
   const todaysTasks = tasks.filter((task) => !task.completed).slice(0, 3);
-  const quote = useMemo(() => t.quotes[new Date().getDay() % t.quotes.length], [t.quotes]);
+  const quote = useMemo(() => t.quotes[new Date(`${todayKey}T00:00:00`).getDay() % t.quotes.length], [t.quotes, todayKey]);
   const unlockedFoods = foods.filter((food) => food.unlockLevel <= level);
   const availableRewards = unlockedFoods.map((food) => food.id);
-  const dailyProgress = Math.min(100, (completed / dailyGoal) * 100);
+  const modalRewards = editingTask && !availableRewards.includes(editingTask.reward.type) ? [...availableRewards, editingTask.reward.type] : availableRewards;
+  const dailyProgress = Math.min(100, (completedToday / dailyGoal) * 100);
   const foodNames = t.foods;
   const taskText = (task: Task) => {
     const translated = task.titleKey ? t.tasksSeed[task.titleKey] : undefined;
@@ -156,8 +187,11 @@ export default function App() {
       if (saved.petStats) setPetStats(saved.petStats);
       if (typeof saved.gentleReminders === "boolean") setGentleReminders(saved.gentleReminders);
       if (typeof saved.sleepMode === "boolean") setSleepMode(saved.sleepMode);
+      if (typeof saved.darkMode === "boolean") setDarkMode(saved.darkMode);
       if (saved.chinchillaColor) setChinchillaColor(saved.chinchillaColor);
       if (saved.seasonalTheme) setSeasonalTheme(saved.seasonalTheme);
+      if (typeof saved.streak === "number") setStreak(saved.streak);
+      if (saved.lastStreakDate !== undefined) setLastStreakDate(saved.lastStreakDate);
     }
 
     setStorageReady(true);
@@ -174,8 +208,11 @@ export default function App() {
       petStats,
       gentleReminders,
       sleepMode,
+      darkMode,
       chinchillaColor,
       seasonalTheme,
+      streak,
+      lastStreakDate,
     };
 
     try {
@@ -183,7 +220,24 @@ export default function App() {
     } catch {
       // Some private browsing modes can block localStorage writes.
     }
-  }, [chinchillaColor, gentleReminders, inventory, locale, petStats, seasonalTheme, sleepMode, storageReady, tasks]);
+  }, [chinchillaColor, darkMode, gentleReminders, inventory, lastStreakDate, locale, petStats, seasonalTheme, sleepMode, storageReady, streak, tasks]);
+
+  useEffect(() => {
+    const updateDate = () => setTodayKey((current) => {
+      const next = dateKey();
+      return current === next ? current : next;
+    });
+
+    updateDate();
+    const dateTimer = window.setInterval(updateDate, 60000);
+    return () => window.clearInterval(dateTimer);
+  }, []);
+
+  useEffect(() => {
+    if (lastStreakDate && lastStreakDate !== todayKey && lastStreakDate !== previousDateKey(todayKey)) {
+      setStreak(0);
+    }
+  }, [lastStreakDate, todayKey]);
 
   useEffect(() => {
     const decayTimer = window.setInterval(() => {
@@ -226,18 +280,34 @@ export default function App() {
   const completeTask = (task: Task) => {
     if (task.completed) return;
     setOpenTaskId(null);
-    setTasks((current) => current.map((item) => (item.id === task.id ? { ...item, completed: true } : item)));
+    setTasks((current) => current.map((item) => (item.id === task.id ? { ...item, completed: true, completedAt: todayKey } : item)));
     setInventory((current) => ({ ...current, [task.reward.type]: current[task.reward.type] + task.reward.amount }));
     setPetStats((current) => ({
       hunger: current.hunger,
       happiness: Math.min(100, current.happiness + 4),
       energy: Math.min(100, current.energy + 2),
     }));
+    if (lastStreakDate !== todayKey) {
+      setStreak((current) => (lastStreakDate === previousDateKey(todayKey) ? current + 1 : 1));
+      setLastStreakDate(todayKey);
+    }
     setReward(task.reward);
     window.setTimeout(() => setReward(null), 1400);
   };
 
   const createTask = (task: Task) => setTasks((current) => [task, ...current]);
+
+  const updateTask = (task: Task) => {
+    setOpenTaskId(null);
+    setTasks((current) => current.map((item) => (item.id === task.id ? task : item)));
+    setEditingTask(null);
+  };
+
+  const openEditTask = (task: Task) => {
+    setOpenTaskId(null);
+    setEditingTask(task);
+    setModalOpen(true);
+  };
 
   const deleteTask = (taskId: string) => {
     setOpenTaskId(null);
@@ -290,7 +360,7 @@ export default function App() {
   }[activeScreen];
 
   return (
-    <main className={`app-shell theme-${seasonalTheme}`}>
+    <main className={`app-shell theme-${seasonalTheme} ${darkMode ? "dark-mode" : ""}`}>
       <RewardBurst reward={reward} foodNames={foodNames} />
       <ReminderToast message={reminderMessage} />
       <section className="phone-frame">
@@ -299,7 +369,14 @@ export default function App() {
             <p className="eyebrow">{t.appName}</p>
             <h1>{t.nav[activeScreen]}</h1>
           </div>
-          <button className="icon-button" aria-label={t.actions.addTask} onClick={() => setModalOpen(true)}>
+          <button
+            className="icon-button"
+            aria-label={t.actions.addTask}
+            onClick={() => {
+              setEditingTask(null);
+              setModalOpen(true);
+            }}
+          >
             <Plus size={20} />
           </button>
         </header>
@@ -325,14 +402,20 @@ export default function App() {
       </section>
       <AddTaskModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+          setEditingTask(null);
+        }}
         onCreate={createTask}
+        onUpdate={updateTask}
+        editingTask={editingTask}
         foodNames={foodNames}
-        availableRewards={availableRewards}
+        availableRewards={modalRewards}
         copy={{
           ...t.modal,
           close: t.actions.close,
           createTask: t.actions.createTask,
+          updateTask: t.modal.updateTask,
         }}
       />
     </main>
@@ -362,7 +445,7 @@ export default function App() {
           <div className="section-head">
             <div>
               <p className="eyebrow">{t.home.dailyGoal}</p>
-              <h2>{t.home.tasksComplete(completed, dailyGoal)}</h2>
+              <h2>{t.home.tasksComplete(completedToday, dailyGoal)}</h2>
             </div>
             <Sparkles size={20} />
           </div>
@@ -379,7 +462,13 @@ export default function App() {
   function TasksScreen() {
     return (
       <>
-        <button className="primary-button wide" onClick={() => setModalOpen(true)}>
+        <button
+          className="primary-button wide"
+          onClick={() => {
+            setEditingTask(null);
+            setModalOpen(true);
+          }}
+        >
           <Plus size={18} /> {t.actions.addTask}
         </button>
         <TaskStack title={t.tasks.focusList} tasks={tasks} showCompleted />
@@ -547,6 +636,25 @@ export default function App() {
             <span />
           </button>
         </article>
+        <article className="setting-row action-setting">
+          <div className="setting-icon">
+            <Sun size={20} />
+          </div>
+          <div className="setting-content">
+            <strong>{t.settings.darkMode}</strong>
+            <span>{darkMode ? t.settings.darkModeOn : t.settings.darkModeHint}</span>
+          </div>
+          <button
+            className={`switch ${darkMode ? "active" : ""}`}
+            type="button"
+            role="switch"
+            aria-checked={darkMode}
+            aria-label={t.settings.darkMode}
+            onClick={() => setDarkMode((value) => !value)}
+          >
+            <span />
+          </button>
+        </article>
         <article className="setting-row choice-setting">
           <div className="setting-icon">
             <Palette size={20} />
@@ -646,7 +754,12 @@ export default function App() {
                   {text.description && <p>{text.description}</p>}
                   <small>{task.deadline ? t.tasks.due(task.deadline) : t.tasks.flexible}</small>
                 </div>
-                <span className="reward-pill">+{task.reward.amount} {food.emoji}</span>
+                <div className="task-actions">
+                  <button className="edit-task-button" type="button" onClick={() => openEditTask(task)} aria-label={`${t.actions.editTask} ${text.title}`}>
+                    <Pencil size={15} />
+                  </button>
+                  <span className="reward-pill">+{task.reward.amount} {food.emoji}</span>
+                </div>
                 </motion.article>
                 </motion.div>
               );

@@ -7,8 +7,11 @@ type AddTaskModalProps = {
   open: boolean;
   onClose: () => void;
   onCreate: (task: Task) => void;
+  onUpdate?: (task: Task) => void;
+  editingTask?: Task | null;
   copy: {
     title: string;
+    editTitle: string;
     taskTitle: string;
     taskPlaceholder: string;
     description: string;
@@ -17,16 +20,18 @@ type AddTaskModalProps = {
     reward: string;
     close: string;
     createTask: string;
+    updateTask: string;
   };
   foodNames: Record<FoodType, string>;
   availableRewards: FoodType[];
 };
 
-export function AddTaskModal({ open, onClose, onCreate, copy, foodNames, availableRewards }: AddTaskModalProps) {
+export function AddTaskModal({ open, onClose, onCreate, onUpdate, editingTask, copy, foodNames, availableRewards }: AddTaskModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
   const [rewardType, setRewardType] = useState<FoodType>("berries");
+  const isEditing = Boolean(editingTask);
 
   useEffect(() => {
     if (!availableRewards.includes(rewardType)) {
@@ -34,9 +39,40 @@ export function AddTaskModal({ open, onClose, onCreate, copy, foodNames, availab
     }
   }, [availableRewards, rewardType]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    if (editingTask) {
+      setTitle(editingTask.title);
+      setDescription(editingTask.description ?? "");
+      setDeadline(editingTask.deadline ?? "");
+      setRewardType(editingTask.reward.type);
+      return;
+    }
+
+    setTitle("");
+    setDescription("");
+    setDeadline("");
+    setRewardType(availableRewards[0] ?? "berries");
+  }, [availableRewards, editingTask, open]);
+
   const submit = (event: FormEvent) => {
     event.preventDefault();
     if (!title.trim()) return;
+    if (editingTask && onUpdate) {
+      onUpdate({
+        ...editingTask,
+        title: title.trim(),
+        titleKey: undefined,
+        description: description.trim() || undefined,
+        descriptionKey: undefined,
+        deadline: deadline || undefined,
+        reward: { ...editingTask.reward, type: rewardType },
+      });
+      onClose();
+      return;
+    }
+
     onCreate({
       id: crypto.randomUUID(),
       title: title.trim(),
@@ -64,7 +100,7 @@ export function AddTaskModal({ open, onClose, onCreate, copy, foodNames, availab
             exit={{ y: 20, opacity: 0, scale: 0.96 }}
           >
             <div className="modal-head">
-              <h2>{copy.title}</h2>
+              <h2>{isEditing ? copy.editTitle : copy.title}</h2>
               <button className="icon-button" type="button" onClick={onClose} aria-label={copy.close}>
                 <X size={18} />
               </button>
@@ -92,7 +128,7 @@ export function AddTaskModal({ open, onClose, onCreate, copy, foodNames, availab
               </label>
             </div>
             <button className="primary-button" type="submit">
-              <Plus size={18} /> {copy.createTask}
+              <Plus size={18} /> {isEditing ? copy.updateTask : copy.createTask}
             </button>
           </motion.form>
         </motion.div>
