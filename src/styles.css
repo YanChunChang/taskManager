@@ -615,6 +615,10 @@ h2 {
   gap: 12px;
 }
 
+.pet-food-grid {
+  padding-bottom: 34px;
+}
+
 .food-card {
   min-height: 134px;
   display: flex;

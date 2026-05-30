@@ -509,7 +509,7 @@ export default function App() {
           <Meter label={t.pet.happiness} value={happiness} tone="pink" />
           <Meter label={t.pet.energy} value={energy} tone="gold" />
         </section>
-        <section className="food-grid">
+        <section className="food-grid pet-food-grid">
           {unlockedFoods.map((food) => (
             <button key={food.id} className="food-card" onClick={() => feedPet(food.id)} disabled={inventory[food.id] <= 0}>
               <span className="food-emoji">{food.emoji}</span>
