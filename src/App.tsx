@@ -441,7 +441,7 @@ export default function App() {
           <Stat icon={Star} label={t.home.stats.level} value={`${level}`} />
         </section>
 
-        <section className="card">
+        <section className="card daily-goal-card">
           <div className="section-head">
             <div>
               <p className="eyebrow">{t.home.dailyGoal}</p>
@@ -450,7 +450,7 @@ export default function App() {
             <Sparkles size={20} />
           </div>
           <div className="progress-track">
-            <motion.div className="progress-fill" animate={{ width: `${dailyProgress}%` }} />
+            <div className="progress-fill" style={{ width: `${dailyProgress}%` }} />
           </div>
         </section>
 
@@ -557,7 +557,7 @@ export default function App() {
           <p className="eyebrow">{t.stats.progression}</p>
           <h2>{t.stats.caretaker(level)}</h2>
           <div className="progress-track">
-            <motion.div className="progress-fill" animate={{ width: `${progressToNextLevel(completed)}%` }} />
+            <div className="progress-fill" style={{ width: `${progressToNextLevel(completed)}%` }} />
           </div>
           <p className="muted">{t.stats.untilNext(3 - (completed % 3))}</p>
         </section>

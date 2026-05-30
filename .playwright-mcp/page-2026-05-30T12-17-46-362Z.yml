@@ -1,0 +1,80 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - paragraph [ref=e6]: Chilla Tasks
+          - heading "Home" [level=1] [ref=e7]
+        - button "Add task" [ref=e8] [cursor=pointer]:
+          - img [ref=e9]
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - paragraph [ref=e13]: Day 0 streak
+            - heading "Feed your focus, then feed Mochi." [level=2] [ref=e14]
+            - paragraph [ref=e15]: Finish one thing. Make the room a little brighter.
+          - button "Open pet screen" [ref=e16] [cursor=pointer]:
+            - generic "Level 1 chinchilla is content" [ref=e17]
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - img [ref=e20]
+            - generic [ref=e22]: Streak
+            - strong [ref=e23]: 0 days
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - generic [ref=e28]: Food
+            - strong [ref=e29]: 5 items
+          - generic [ref=e30]:
+            - img [ref=e31]
+            - generic [ref=e33]: Level
+            - strong [ref=e34]: "1"
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - paragraph [ref=e38]: Daily goal
+            - heading "1/4 tasks complete" [level=2] [ref=e39]
+          - img [ref=e40]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - heading "Today" [level=2] [ref=e47]
+            - generic [ref=e48]: "2"
+          - generic [ref=e49]:
+            - article [ref=e51]:
+              - button "Complete Plan the top three priorities" [ref=e52] [cursor=pointer]
+              - generic [ref=e53]:
+                - strong [ref=e54]: Plan the top three priorities
+                - paragraph [ref=e55]: Choose the most meaningful tasks for today.
+                - generic [ref=e56]: Due 2026-05-30
+              - generic [ref=e57]:
+                - button "Edit Plan the top three priorities" [ref=e58] [cursor=pointer]:
+                  - img [ref=e59]
+                - generic [ref=e62]: +2 🫐
+            - article [ref=e64]:
+              - button "Complete Deep work sprint" [ref=e65] [cursor=pointer]
+              - generic [ref=e66]:
+                - strong [ref=e67]: Deep work sprint
+                - paragraph [ref=e68]: A calm 30-minute focus block.
+                - generic [ref=e69]: Flexible timing
+              - generic [ref=e70]:
+                - button "Edit Deep work sprint" [ref=e71] [cursor=pointer]:
+                  - img [ref=e72]
+                - generic [ref=e75]: +3 🌰
+      - navigation "Main navigation" [ref=e76]:
+        - button "Home" [ref=e77] [cursor=pointer]:
+          - img [ref=e78]
+          - generic [ref=e81]: Home
+        - button "Tasks" [ref=e82] [cursor=pointer]:
+          - img [ref=e83]
+          - generic [ref=e86]: Tasks
+        - button "Pet" [ref=e87] [cursor=pointer]:
+          - img [ref=e88]
+          - generic [ref=e91]: Pet
+        - button "Food" [ref=e92] [cursor=pointer]:
+          - img [ref=e93]
+          - generic [ref=e95]: Food
+        - button "Stats" [ref=e96] [cursor=pointer]:
+          - img [ref=e97]
+          - generic [ref=e99]: Stats
+        - button "Settings" [ref=e100] [cursor=pointer]:
+          - img [ref=e101]
+          - generic [ref=e104]: Settings
+  - alert [ref=e105]
